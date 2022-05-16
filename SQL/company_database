@@ -92,3 +92,41 @@ INSERT INTO Branch_Supplier(branch_id,supplier_name,supply_type) VALUES (3,'Hamm
 INSERT INTO Branch_Supplier(branch_id,supplier_name,supply_type) VALUES (3,'Stamford Lables','Custom Forms');
 
 select * from Branch_Supplier;
+
+-- Find all clients who are handles by the branch that Michael Scott manages. Assume you DONT'T know Michael's ID
+
+select client_name from Client where branch_id in (select branch_id from Employee where first_name = 'Michael' and last_name='Scott');
+
+-- Find the names of employees who work with clients handled by the Scranton branch
+
+select first_name , last_name from Employee where branch_id in (select branch_id from Branch where branch_name = 'Scranton');
+
+-- Find the names of all clients who have spent more than 100,000 dollars
+
+select client_name from client where client_id in (Select client_id from works_with group by client_id having sum (total_sales) > 100000); 
+
+-- Create a trigger to insert an entry into a new table based on gender, for ex: added male employee, added female employee, added other employees.
+
+create table Sex (
+   emp_id int not null,
+   sex char);
+
+create or replace function gender_count() returns trigger as $$ 
+   Begin 
+       insert into Sex(emp_id,sex) values (new.emp_id,new.sex);
+       return new ;
+   end; 
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER example_trigger AFTER INSERT ON Employee
+FOR EACH ROW EXECUTE PROCEDURE gender_count();
+
+
+INSERT INTO Employee (emp_id,first_name,last_name,birth_date,sex,salary,super_id,branch_id)
+VALUES  (109,'root','tommy','1979-10-01','M',71000,106,3);
+
+
+
+
+
+
