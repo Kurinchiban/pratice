@@ -289,6 +289,3 @@ if __name__ == '__main__':
     Ex1.process_Exit(C3.vehicle)
     print()
     P.display_board()
-
- 
-
