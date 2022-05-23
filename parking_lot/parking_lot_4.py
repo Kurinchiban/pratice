@@ -15,18 +15,10 @@ class ParkingLot:
         self.name = name 
         self.address = address 
         self.floors = [] 
-        self.entrance = [] 
-        self.exit = [] 
         self.ticket = [] 
 
     def display_floor_count(self):
         print(len(self.floors))
-
-    def display_entrance_count(self):
-        print(len(self.entrance))
-
-    def display_exit_count(self):
-        print(len(self.exit))
 
     def display_ticket_count(self):
         print(len(self.ticket))
@@ -70,7 +62,7 @@ class ParkingFloor:
         return len(self.spots)
 
 # creating the class for the Parking_spot
-class Parking_Spot:
+class ParkingSpot:
     def __init__(self,spot_id,vehicle_type,is_free):
         self.spot_id = spot_id 
         self.vehicle_type = vehicle_type  
@@ -90,7 +82,7 @@ class Ticket:
 # creating the class for the entrance
 class Entrance:
 
-    def process_Entry(self,vehicle):
+    def process_entry(self,vehicle):
         # Iterating the floors              
         for floor in P.floors:
             if system.is_spot_available(floor,vehicle):
@@ -106,7 +98,7 @@ class Entrance:
 # creating the class for the entrance
 class Exit:
 
-    def process_Exit(self,vehicle):
+    def process_exit(self,vehicle):
         for ticket in P.ticket:
             if ticket.vehicle_number == vehicle.vehicle_number :
                 if ticket.payment_status :
@@ -117,7 +109,7 @@ class Exit:
                 else:
                     print("You have not paid the amount for parking your vehicle please process the payment")
                     payment.process_payment(ticket)
-                    Ex1.process_Exit(vehicle)
+                    Ex1.process_exit(vehicle)
                     break
 
 # creating the class for the system
@@ -125,14 +117,6 @@ class System :
     
     ticket_id=1
 
-    def assign_entrance(self):
-        entrance=random.choice(P.entrance)
-        return entrance
-    
-    def assign_exit(self):
-        exit=random.choice(P.exit)
-        return exit
-     
     def is_spot_available(self,floor,vehicle):
         for spot in floor.spots:
             if (spot.vehicle_type == vehicle.vehicle_type) and (spot.is_free == True):
@@ -185,31 +169,19 @@ class Admin ():
     def remove_floor(self,floor):
         P.floors.remove(floor)
 
-    def add_entrance(self,entrance):
-        P.entrance.append(entrance)
-
-    def remove_entrance(self,entrance):
-        P.entrance.remove(entrance)
-
-    def add_exit(self,exit):
-        P.exit.append(exit)
-
-    def remove_exit(self,exit):
-        P.exit.remove(exit) 
-
-    def add_spot(self,Floor,Type_of_vehicle,No_of_space):
-        if Type_of_vehicle == VehicleType.CAR or Type_of_vehicle == VehicleType.VAN or Type_of_vehicle == VehicleType.BIKE:
+    def add_spot(self,Floor,type_of_vehicle,No_of_space):
+        if type_of_vehicle == VehicleType.CAR or type_of_vehicle == VehicleType.VAN or type_of_vehicle == VehicleType.BIKE:
             for space in range(No_of_space):
                 spot_id = Floor.generate_spot_id(space)
-                vehicle_type = Type_of_vehicle
-                spot=Parking_Spot(spot_id,vehicle_type,True)
+                vehicle_type = type_of_vehicle
+                spot=ParkingSpot(spot_id,vehicle_type,True)
                 Floor.spots.append(spot)
 
-    def remove_spot(self,Floor,Type_of_vehicle,No_of_space):
-        if Type_of_vehicle == VehicleType.CAR or Type_of_vehicle == VehicleType.VAN or Type_of_vehicle == VehicleType.BIKE :
+    def remove_spot(self,Floor,type_of_vehicle,No_of_space):
+        if type_of_vehicle == VehicleType.CAR or type_of_vehicle == VehicleType.VAN or type_of_vehicle == VehicleType.BIKE :
             for _ in No_of_space:
                 for spot in Floor.spots:
-                    if (spot.vehicle_type == Type_of_vehicle) and (spot.is_free == True):
+                    if (spot.vehicle_type == type_of_vehicle) and (spot.is_free == True):
                         Floor.spots.remove(spot) 
     
 # creating the class for the Parking_spot
@@ -256,17 +228,11 @@ if __name__ == '__main__':
     admin.add_floor(floor_1)
     # adding the entrance to the parkinglot 
     E1 = Entrance()
-    admin.add_entrance(E1)
+
     # adding the exit to the parkinglot 
     Ex1 = Exit()
-    admin.add_exit(Ex1)
-
-    # P.display_floor_count()
-    # P.display_entrance_count()
-    # P.display_exit_count()
 
     # adding spots for Floor_1 
-
     admin.add_spot(floor_1,VehicleType.CAR,3)
     admin.add_spot(floor_1,VehicleType.VAN,3)
     admin.add_spot(floor_1,VehicleType.BIKE,3)
@@ -274,18 +240,24 @@ if __name__ == '__main__':
     # Will display the number of spot available in the parking lot
     P.display_board()
     print()
+
     # customer 1 entrance
     C1 = Customer("Kumar",Vehicle('TN A5454',VehicleType.CAR))
-    E1.process_Entry(C1.vehicle)
+    E1.process_entry(C1.vehicle)
+
     # customer 2 entrance
     C2 = Customer("Lokesh",Vehicle('TN B9000',VehicleType.BIKE))
-    E1.process_Entry(C2.vehicle)
+    E1.process_entry(C2.vehicle)
+
     # customer 3 entrance
     C3 = Customer("RAJ",Vehicle('TN C9001',VehicleType.VAN))
-    E1.process_Entry(C3.vehicle)
+    E1.process_entry(C3.vehicle)
     print()
+
     time.sleep(2)
+
     # customer 3 exit
-    Ex1.process_Exit(C3.vehicle)
+    Ex1.process_exit(C3.vehicle)
     print()
+    
     P.display_board()
