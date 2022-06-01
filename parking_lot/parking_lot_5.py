@@ -64,13 +64,13 @@ class ParkingLot:
             # iterating the spots
             for spot in floor.spots:
                 # cheking the free spot for car
-                if (spot.vehicle_type == VehicleType.CAR) and (spot.is_free == True ):
+                if (spot.spot_type == VehicleType.CAR) and (spot.is_free == True ):
                     car += 1 
                 # cheking the free spot for bike
-                elif (spot.vehicle_type == VehicleType.BIKE) and (spot.is_free == True ):
+                elif (spot.spot_type == VehicleType.BIKE) and (spot.is_free == True ):
                     bike += 1
                 # cheking the free spot for van
-                elif (spot.vehicle_type == VehicleType.VAN) and (spot.is_free == True ):
+                elif (spot.spot_type == VehicleType.VAN) and (spot.is_free == True ):
                     van += 1
             print("Spot available in the {} : " .format(floor.name))
             print("     CAR  : {} ".format(car))
@@ -99,14 +99,14 @@ class ParkingFloor:
     def check_spot_available(self,vehicle):
         """ This function will will do the operation to check the spot available for the given type of the vehicle """
         for spot in self.spots:
-            if (spot.vehicle_type == vehicle.vehicle_type) and (spot.is_free == True):
+            if (spot.spot_type == vehicle.vehicle_type) and (spot.is_free == True):
                 return True
 
     def assigning_spot_id (self,vehicle):
         """ This function will do the operation to assign the spot_id for the given type of vehicle which make the spot occupied and return the spot_id"""
         for spot in self.spots:
             # checking the spot for the required vehicle type and finding is_free
-            if (spot.vehicle_type == vehicle.vehicle_type) and (spot.is_free == True):
+            if (spot.spot_type == vehicle.vehicle_type) and (spot.is_free == True):
                 spot.is_free = False 
                 return spot.spot_id
     
@@ -128,9 +128,9 @@ class ParkingFloor:
 # creating the class for the Parking_spot
 class ParkingSpot:
     # Attributes : spot_id, vehicle_type, is free
-    def __init__(self,spot_id,vehicle_type,is_free):
+    def __init__(self,spot_id,spot_type,is_free):
         self.spot_id = spot_id 
-        self.vehicle_type = vehicle_type  
+        self.spot_type = spot_type  
         self.is_free = is_free
 
 class Checkpoint:
